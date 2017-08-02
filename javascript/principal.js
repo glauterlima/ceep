@@ -1,3 +1,4 @@
+
 var mural = document.querySelector('.mural');
 
 function efetuaMudancaDeLayout() {
@@ -35,10 +36,23 @@ function removeCartao(){
     
 }
 
-var formulario = document.querySelector('.novoCartao');
-formulario.addEventListener('submit', salvaCartao);
+//var formulario = document.querySelector('.novoCartao');
+//formulario.addEventListener('submit', salvaCartao);
+
+$('.novoCartao').submit(salvaCartao);
 
 function salvaCartao(evento){
+    evento.preventDefault();
+    var campoConteudo = $('.novoCartao-conteudo', this);
+    var digitado = campoConteudo.val();
+    
+    var conteudoNovoCartao = $('<p>').addClass('cartao-conteudo').text(digitado);
+    
+    $('<div>').addClass('cartao').append(conteudoNovoCartao).prependTo('.mural');
+    
+}
+
+/*function salvaCartao(evento){
     evento.preventDefault();
     var campoConteudo = document.querySelector('.novoCartao-conteudo');
     var digitado = campoConteudo.value;
@@ -54,4 +68,4 @@ function salvaCartao(evento){
     
     var mural = document.querySelector('.mural');
     mural.insertBefore(novoCartao, mural.firstElementChild);
-}
+}*/
