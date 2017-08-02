@@ -54,9 +54,10 @@ function salvaCartao(evento) {
         var opcoesDoCartao = $('<div>').addClass('opcoesDoCartao').append(botaoRemove);
 
         $('<div>').addClass('cartao').append(opcoesDoCartao).append(conteudoNovoCartao).attr('id', 'cartao' + contador).prependTo('.mural');
-    } else {
-        window.alert('Favor digitar algo');
     }
+    campoConteudo.val('');
+    campoConteudo.focus();
+    
 }
 
 /*function salvaCartao(evento){
