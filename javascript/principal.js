@@ -1,10 +1,10 @@
-
 var mural = document.querySelector('.mural');
+var contador = $('.cartao').length;
 
 function efetuaMudancaDeLayout() {
-    
+
     mural.classList.toggle('mural--linhas');
-    
+
 }
 
 var botaoLayout = document.querySelector('#mudaLayout');
@@ -12,7 +12,7 @@ var botaoLayout = document.querySelector('#mudaLayout');
 
 botaoLayout.addEventListener('click', efetuaMudancaDeLayout);
 
-botaoLayout.addEventListener('click', function() {
+botaoLayout.addEventListener('click', function () {
     if (mural.classList.contains('mural--linhas')) {
         botaoLayout.textContent = 'Blocos';
     } else {
@@ -21,19 +21,19 @@ botaoLayout.addEventListener('click', function() {
 });
 
 var botoesRemove = document.querySelectorAll('.opcoesDoCartao-remove');
-for (var i=0; i<botoesRemove.length; i++){
+for (var i = 0; i < botoesRemove.length; i++) {
     var botaoRemove = botoesRemove[i];
     botaoRemove.addEventListener('click', removeCartao);
 }
 
-function removeCartao(){
+function removeCartao() {
     var idDoCartao = this.dataset.cartao;
     var cartao = document.querySelector('#cartao' + idDoCartao);
     cartao.classList.add('cartao--some');
-    setTimeout(function() {
+    setTimeout(function () {
         cartao.remove();
     }, 2000);
-    
+
 }
 
 //var formulario = document.querySelector('.novoCartao');
@@ -41,15 +41,22 @@ function removeCartao(){
 
 $('.novoCartao').submit(salvaCartao);
 
-function salvaCartao(evento){
+function salvaCartao(evento) {
     evento.preventDefault();
     var campoConteudo = $('.novoCartao-conteudo', this);
-    var digitado = campoConteudo.val();
-    
-    var conteudoNovoCartao = $('<p>').addClass('cartao-conteudo').text(digitado);
-    
-    $('<div>').addClass('cartao').append(conteudoNovoCartao).prependTo('.mural');
-    
+    var digitado = campoConteudo.val().trim();
+
+    if (digitado) {
+
+        contador++;
+        var conteudoNovoCartao = $('<p>').addClass('cartao-conteudo').text(digitado);
+        var botaoRemove = $('<button>').addClass('opcoesDoCartao-opcao opcoesDoCartao-remove').text('Remove').click(removeCartao).attr('data-cartao', contador);
+        var opcoesDoCartao = $('<div>').addClass('opcoesDoCartao').append(botaoRemove);
+
+        $('<div>').addClass('cartao').append(opcoesDoCartao).append(conteudoNovoCartao).attr('id', 'cartao' + contador).prependTo('.mural');
+    } else {
+        window.alert('Favor digitar algo');
+    }
 }
 
 /*function salvaCartao(evento){
