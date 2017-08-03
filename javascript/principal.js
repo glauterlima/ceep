@@ -44,21 +44,46 @@ $('.novoCartao').submit(salvaCartao);
 function salvaCartao(evento) {
     evento.preventDefault();
     var campoConteudo = $('.novoCartao-conteudo', this);
-    var digitado = campoConteudo.val().trim();
+    var digitado = campoConteudo.val().trim().replace(/\n/g, '<br>');
 
     if (digitado) {
 
         contador++;
-        var conteudoNovoCartao = $('<p>').addClass('cartao-conteudo').text(digitado);
+        var conteudoNovoCartao = $('<p>').addClass('cartao-conteudo').html(digitado);
         var botaoRemove = $('<button>').addClass('opcoesDoCartao-opcao opcoesDoCartao-remove').text('Remove').click(removeCartao).attr('data-cartao', contador);
         var opcoesDoCartao = $('<div>').addClass('opcoesDoCartao').append(botaoRemove);
+        var tipoCartao = decideTipoCartao(digitado);
 
-        $('<div>').addClass('cartao').append(opcoesDoCartao).append(conteudoNovoCartao).attr('id', 'cartao' + contador).prependTo('.mural');
+        $('<div>').addClass('cartao').addClass(tipoCartao).append(opcoesDoCartao).append(conteudoNovoCartao).attr('id', 'cartao' + contador).prependTo('.mural');
     }
     campoConteudo.val('');
     campoConteudo.focus();
     
 }
+
+function decideTipoCartao(texto) {
+    var quebras = texto.split('<br>').length - 1;
+    var semQuebras = texto.replace('<br>', ' ');
+    var letras = semQuebras.length;
+    var palavras = semQuebras.split(' ');
+    var tamanhoMaiorPalavra = 0;
+    
+    $.each(palavras, function() {
+        var palavra = this;
+        if(palavra.length > tamanhoMaiorPalavra) {
+            tamanhoMaiorPalavra = palavra.length;
+        }
+    });
+    
+    if(quebras < 5 && letras < 55 && tamanhoMaiorPalavra < 9) {
+        return "cartao--textoGrande"; 
+    } else if (quebras < 6 && letras < 75 && tamanhoMaiorPalavra < 12) {
+        return "cartao--textoMedio";
+    } else {
+        return "cartao--textoPequeno";
+    }
+}
+
 
 /*function salvaCartao(evento){
     evento.preventDefault();

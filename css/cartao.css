@@ -18,6 +18,21 @@
 		box-sizing: border-box;
 		vertical-align: top;
 	}
+    
+    .cartao--textoGrande {
+        font-size: 2em;
+        width: 6em;
+    }
+    
+    .cartao--textoMedio {
+        font-size: 1.5em;
+        width: 9em;
+    }
+    
+    .cartao--textoPequeno {
+        font-size: 1em;
+        width: 11em;
+    }
 
 }
 
