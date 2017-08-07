@@ -48,17 +48,13 @@ function salvaCartao(evento) {
 
     if (digitado) {
 
-        contador++;
-        var conteudoNovoCartao = $('<p>').addClass('cartao-conteudo').html(digitado);
-        var botaoRemove = $('<button>').addClass('opcoesDoCartao-opcao opcoesDoCartao-remove').text('Remove').click(removeCartao).attr('data-cartao', contador);
-        var opcoesDoCartao = $('<div>').addClass('opcoesDoCartao').append(botaoRemove);
-        var tipoCartao = decideTipoCartao(digitado);
+        criaCartao(digitado);
 
-        $('<div>').addClass('cartao').addClass(tipoCartao).append(opcoesDoCartao).append(conteudoNovoCartao).attr('id', 'cartao' + contador).prependTo('.mural');
+
     }
     campoConteudo.val('');
     campoConteudo.focus();
-    
+
 }
 
 function decideTipoCartao(texto) {
@@ -67,16 +63,16 @@ function decideTipoCartao(texto) {
     var letras = semQuebras.length;
     var palavras = semQuebras.split(' ');
     var tamanhoMaiorPalavra = 0;
-    
-    $.each(palavras, function() {
+
+    $.each(palavras, function () {
         var palavra = this;
-        if(palavra.length > tamanhoMaiorPalavra) {
+        if (palavra.length > tamanhoMaiorPalavra) {
             tamanhoMaiorPalavra = palavra.length;
         }
     });
-    
-    if(quebras < 5 && letras < 55 && tamanhoMaiorPalavra < 9) {
-        return "cartao--textoGrande"; 
+
+    if (quebras < 5 && letras < 55 && tamanhoMaiorPalavra < 9) {
+        return "cartao--textoGrande";
     } else if (quebras < 6 && letras < 75 && tamanhoMaiorPalavra < 12) {
         return "cartao--textoMedio";
     } else {
@@ -84,30 +80,72 @@ function decideTipoCartao(texto) {
     }
 }
 
-$('#busca').on('input', function() {
+$('#busca').on('input', function () {
     var digitado = $(this).val().trim();
     var regex = new RegExp(digitado, 'i');
-    $('.cartao').hide().filter(function() {
+    $('.cartao').hide().filter(function () {
         var conteudo = $(this).find('.cartao-conteudo').text();
         return regex.test(conteudo);
     }).show();
 });
 
+$('#ajuda').one('click', buscaAJudaDoServidor);
 
-/*function salvaCartao(evento){
-    evento.preventDefault();
-    var campoConteudo = document.querySelector('.novoCartao-conteudo');
-    var digitado = campoConteudo.value;
-    console.log(digitado);
-    
-    var conteudoNovoCartao = document.createElement('p');
-    conteudoNovoCartao.classList.add('cartao-conteudo');
-    conteudoNovoCartao.textContent = digitado;
-    
-    var novoCartao = document.createElement('div');
-    novoCartao.classList.add('cartao');
-    novoCartao.appendChild(conteudoNovoCartao);
-    
-    var mural = document.querySelector('.mural');
-    mural.insertBefore(novoCartao, mural.firstElementChild);
-}*/
+function buscaAJudaDoServidor() {
+    $.getJSON('http://ceep.herokuapp.com/cartoes/instrucoes',
+        function (dados) {
+            $.each(dados.instrucoes, function () {
+                var cartao = this;
+                console.log(cartao.conteudo);
+                criaCartao(cartao.conteudo, cartao.cor);
+            });
+
+        });
+}
+
+function criaCartao(conteudo, cor) {
+    contador++;
+    var conteudoNovoCartao = $('<p>').addClass('cartao-conteudo').html(conteudo);
+    var botaoRemove = $('<button>').addClass('opcoesDoCartao-opcao opcoesDoCartao-remove').text('Remove').click(removeCartao).attr('data-cartao', contador);
+    var opcoesDoCartao = $('<div>').addClass('opcoesDoCartao').append(botaoRemove);
+    var tipoCartao = decideTipoCartao(conteudo);
+
+    $('<div>').addClass('cartao').addClass(tipoCartao).append(opcoesDoCartao).append(conteudoNovoCartao).css('background-color', cor).attr('id', 'cartao' + contador).prependTo('.mural');
+}
+
+$('#sync').click(function () {
+
+    $('#sync').addClass('botaoSync--esperando');
+
+    var cartoes = [];
+    $('.cartao').each(function () {
+        var cartao = $(this);
+        var conteudo = cartao.find('.cartao-conteudo').text();
+        var cor = cartao.css('background-color');
+        cartoes.push({
+            conteudo, cor
+        });
+    });
+    console.log(cartoes);
+
+    var mural = {
+        usuario: 'glauterlima@gmail.com',
+        cartoes: cartoes
+    };
+    $.ajax({
+        url: 'http://ceep.herokuapp.com/cartoes/salvar',
+        method: 'POST',
+        data: mural,
+        dataType: 'json',
+        success: function (resposta) {
+            console.log(resposta);
+            $('#sync').addClass('botaoSync--sincronizado');
+        },
+        error: function () {
+            $('#sync').addClass('botaoSync--deuRuim');
+        },
+        complete: function () {
+            $('#sync').removeClass('botaoSync--esperando');
+        }
+    })
+});
