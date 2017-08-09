@@ -1,7 +1,7 @@
-var mural = document.querySelector('.mural');
-var contador = $('.cartao').length;
+//var mural = document.querySelector('.mural');
+//var contador = $('.cartao').length;
 
-function efetuaMudancaDeLayout() {
+/*function efetuaMudancaDeLayout() {
 
     mural.classList.toggle('mural--linhas');
 
@@ -40,7 +40,6 @@ function removeCartao() {
 //formulario.addEventListener('submit', salvaCartao);
 
 $('.novoCartao').submit(salvaCartao);
-
 function salvaCartao(evento) {
     evento.preventDefault();
     var campoConteudo = $('.novoCartao-conteudo', this);
@@ -149,3 +148,12 @@ $('#sync').click(function () {
         }
     })
 });
+
+$.getJSON('http://ceep.herokuapp.com/cartoes/carregar?callback=?', 
+          {usuario:'glauterlima@gmail.com'},
+           function(dados) {
+            $.each(dados.cartoes, function() {
+                criaCartao(this.conteudo, this.cor);
+            });
+});
+*/
