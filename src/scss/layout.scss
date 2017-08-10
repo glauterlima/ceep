@@ -1,0 +1,6 @@
+#mudaLayout {
+    display: none;
+    @media(min-width: 560px) {
+        display: inline-block;
+    }
+}

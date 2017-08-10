@@ -1,0 +1,22 @@
+{
+  "name": "ceep",
+  "homepage": "https://github.com/glauterlima/ceep",
+  "authors": [
+    "Glauter Santos <glauterlima@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.5",
+    "jquery": "^3.2.1",
+    "js": "^6.0.1"
+  }
+}
